@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.vipbubble">
+
+    <!-- 1. Üstte Görünme İzni (Ekran üstüne floating baloncuk çizmek için) -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- 2. Arka plan ön plan servis izinleri (Android 9+) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- 3. Ekran açık/kapalı kontrolü (PowerManager.isInteractive) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- 4. Android 11+ (API 30+) Instagram paketini sorgulayabilmek için -->
+    <queries>
+        <package android:name="com.instagram.android" />
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="instagram" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="VIP DM Bubble"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.VIPBubble">
+
+        <!-- Ana Ekran & İzin İsteme Arayüzü -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Bildirim Dinleyici Servisi (NotificationListenerService) -->
+        <service
+            android:name=".service.InstagramNotificationService"
+            android:label="Instagram VIP Bildirim Yakalayıcı"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- Yüzen Baloncuk Servisi (Overlay WindowManager) -->
+        <service
+            android:name=".service.FloatingBubbleService"
+            android:enabled="true"
+            android:exported="false" />
+
+    </application>
+
+</manifest>
