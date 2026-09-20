@@ -16,12 +16,16 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: gradle
-    - name: Make Gradle Wrapper Executable
-      run: chmod +x gradlew
-    - name: Build Debug APK with Gradle
-      run: ./gradlew assembleDebug --stacktrace
-    - name: Upload Debug APK Artifact
+    - name: Grant Execute Permission for Gradle
+      run: chmod +x gradlew || true
+    - name: Build Debug APK
+      run: |
+        if [ -f "./gradlew" ]; then
+          ./gradlew assembleDebug --stacktrace
+        else
+          gradle assembleDebug --stacktrace
+        fi
+    - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
         name: InstagramVipBubble-Debug-APK
